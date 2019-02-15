@@ -32,7 +32,8 @@ public static int leftBitchPort = 2;
 public static int leftCheekPort = 3;
 public static int rightBitchPort = 0;
 public static int rightCheekPort = 1;
-
+public static int mechOnePort = 4;
+public static int mechTwoPort = 5;
 public static int joystickPort = 0;
 public static int WheelDiameter = 6;
 

@@ -8,22 +8,19 @@ import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.PWMSpeedController;
 
 public class DriveTrain {
-    //public PWMSpeedController leftBitch = new PWMSpeedController(RobotMap.leftBitchPort);
-    //public PWMSpeedController leftCheek = new PWMSpeedController(RobotMap.leftCheekPort);
-    //public PWMSpeedController rightBitch = new PWMSpeedController(RobotMap.rightBitchPort);
-    //public PWMSpeedController rightCheek = new PWMSpeedController(RobotMap.rightCheekPort);
-    //if below doesnt work comment it out and try the above instead and the ones commented under m_left + m_right
-    //We use VictorSP instead of VictorSPX because SPX driving is written in CTRE libraries, not WPILIB. They are essentially the same motor controller
+    
     VictorSP leftFront = new VictorSP(RobotMap.leftBitchPort);
     VictorSP rightFront = new VictorSP(RobotMap.rightBitchPort);
     VictorSP leftRear = new VictorSP(RobotMap.leftCheekPort);
     VictorSP rightRear = new VictorSP(RobotMap.rightCheekPort);
-    //left motor group (i think i assigned the motors corectly)
+    
+    //left motor group
     SpeedControllerGroup m_left = new SpeedControllerGroup(leftFront, leftRear);
-    //SpeedControllerGroup m_left = new SpeedControllerGroup(leftBitch, leftCheek);
     //right motor group
+
+    //mechanism motor group
+    
     SpeedControllerGroup m_right = new SpeedControllerGroup(rightFront, rightRear);
-    //SpeedControllerGroup m_right = new SpeedControllerGroup(rightBitch, rightCheek);
     //drivetrain group of left and right
     DifferentialDrive drive = new DifferentialDrive(m_left, m_right);
     //stolen from 4068 old robot code
@@ -51,6 +48,7 @@ public class DriveTrain {
         
         
       }
+      
 
     
 }

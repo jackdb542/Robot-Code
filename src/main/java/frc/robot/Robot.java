@@ -9,12 +9,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subystems.DriveTrain;
 import frc.robot.subystems.InputJoystick;
+import frc.robot.subystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -23,7 +24,7 @@ import frc.robot.subystems.InputJoystick;
  * creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
 
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -31,6 +32,9 @@ public class Robot extends IterativeRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   Joystick joy = new Joystick(0);
   DriveTrain driver = new DriveTrain();
+  private boolean pressedUp;
+  private boolean pressedDown;
+  Mechanism mech = new Mechanism();
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -96,8 +100,19 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopPeriodic() {
     InputJoystick injoy = new InputJoystick(joy, 0.0);
+    
+
+    pressedUp = injoy.getButtonUp();
+    pressedDown = injoy.getButtonDown();
+
+    if (pressedUp == true && pressedDown != true) {
+      mech.mechDrive(0.1);
+    }
+    else if (pressedDown == true && pressedDown != true) {
+      mech.mechDrive(-0.1);
+    }
     drive(injoy);
-  }
+    }
   public void drive(InputJoystick injoy) {
     
     double x = injoy.getX();
@@ -105,9 +120,7 @@ public class Robot extends IterativeRobot {
     double r = injoy.getTwist();
     driver.manualDrive(x, y, r);
   }
-  /**
-   * This function is called periodically during test mode.
-   */
+  
   @Override
   public void testPeriodic() {
     

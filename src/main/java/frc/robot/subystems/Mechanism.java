@@ -6,19 +6,22 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.subystems;
-
-import edu.wpi.first.wpilibj.command.Subsystem;
-
-/**
- * Add your docs here.
- */
-public class Mechanism extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-
-  @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.PWMSpeedController;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
+public class Mechanism {
+  public Mechanism() {
+    
   }
+  VictorSP mechOne = new VictorSP(RobotMap.mechOnePort);
+  PWMTalonSRX mechTwo = new PWMTalonSRX(RobotMap.mechTwoPort);
+  SpeedControllerGroup m_mech = new SpeedControllerGroup(mechOne, mechTwo);
+  public void mechDrive(double power){
+    m_mech.set(power);
+  }
+  
 }
