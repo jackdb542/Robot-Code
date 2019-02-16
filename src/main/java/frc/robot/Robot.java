@@ -104,12 +104,17 @@ public class Robot extends TimedRobot {
 
     pressedUp = injoy.getButtonUp();
     pressedDown = injoy.getButtonDown();
-
+    if (pressedUp == false && pressedDown == false) {
+      mech.mechDrive(0);
+    }
     if (pressedUp == true && pressedDown != true) {
       mech.mechDrive(0.1);
     }
     else if (pressedDown == true && pressedDown != true) {
       mech.mechDrive(-0.1);
+    }
+    else {
+      mech.mechDrive(0);
     }
     drive(injoy);
     }
