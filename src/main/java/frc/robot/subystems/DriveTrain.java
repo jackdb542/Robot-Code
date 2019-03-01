@@ -24,17 +24,17 @@ public class DriveTrain {
     //drivetrain group of left and right
     DifferentialDrive drive = new DifferentialDrive(m_left, m_right);
     //stolen from 4068 old robot code
-    int inputCurve = 5;
-    double RFM = -0.0;
-	double RBM = 0.0;
-	double LBM = -0.5;
-	double LFM = 0.5;
+    int inputCurve = 4;
+    double RFM = -1;
+	double RBM = 1;
+	double LBM = -1;
+	double LFM = 1;
     public DriveTrain(){
         drive.setDeadband(0.02);
     }
     public void manualDrive(double x, double y, double r){
         //halve the turning power
-        r *=0.5;
+        r *=0.5;//*9*/
         // front wheel power is linked to rear wheel power so these two are really left power and right power
         //left front power
         double lfpower = +y + r;

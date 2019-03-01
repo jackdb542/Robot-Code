@@ -19,8 +19,12 @@ public class Mechanism {
   }
   VictorSP mechOne = new VictorSP(RobotMap.mechOnePort);
   PWMTalonSRX mechTwo = new PWMTalonSRX(RobotMap.mechTwoPort);
-  SpeedControllerGroup m_mech = new SpeedControllerGroup(mechOne, mechTwo);
+  SpeedControllerGroup m_mechdrive = new SpeedControllerGroup(mechOne);
+  SpeedControllerGroup m_mech = new SpeedControllerGroup(mechTwo);
   public void mechDrive(double power){
+    m_mechdrive.set(power);
+  }
+  public void mechTurn(double power) {
     m_mech.set(power);
   }
   

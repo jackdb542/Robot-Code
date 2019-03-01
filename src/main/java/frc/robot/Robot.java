@@ -8,14 +8,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subystems.DriveTrain;
 import frc.robot.subystems.InputJoystick;
-import frc.robot.subystems.*;
+import frc.robot.subystems.Mechanism;
+import frc.robot.subystems.Pneumatics;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,8 +33,16 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   Joystick joy = new Joystick(0);
   DriveTrain driver = new DriveTrain();
+  Pneumatics pneu = new Pneumatics();
+  XboxController xbox = new XboxController(1);
+  
   private boolean pressedUp;
   private boolean pressedDown;
+  private boolean mechPressedDown;
+  private boolean mechPressedUp;
+
+  private boolean pistonUp;
+  private boolean pistonDown;
   Mechanism mech = new Mechanism();
   /**
    * This function is run when the robot is first started up and should be
@@ -45,6 +54,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    //start compressor
+    pneu.compressorState(true);
   }
 
   /**
@@ -78,46 +89,69 @@ public class Robot extends TimedRobot {
     System.out.println("Auto selected: " + m_autoSelected);
   }
 
+  public void doPeriodic() {
+    InputJoystick injoy = new InputJoystick(joy, 0.0);
+    InputJoystick inbox = new InputJoystick(xbox, 0.0);
+    
+    pressedUp = inbox.getButtonUp();
+    pressedDown = inbox.getButtonDown();
+    mechPressedUp = inbox.GetButtonMechUp();
+    mechPressedDown = inbox.GetButtonMechDown();
+    pistonUp = injoy.GetButtonPistonUp();
+    pistonDown = injoy.GetButtonPistonDown();
+    if (pressedUp == false && pressedDown == false) {
+      mech.mechDrive(0);
+    }
+    if (pressedUp == true && pressedDown != true) {
+      mech.mechDrive(0.8);
+    }
+    else if (pressedDown == true && pressedUp != true) {
+      mech.mechDrive(-0.8);
+    }
+    else {
+      mech.mechDrive(0);
+    }
+    if (mechPressedUp == false && mechPressedDown == false) {
+      mech.mechTurn(0);
+    }
+    if (mechPressedUp == true && mechPressedDown != true) {
+      mech.mechTurn(0.2);
+    }
+    else if (mechPressedDown == true && mechPressedUp != true) {
+      mech.mechTurn(-0.2);
+    }
+    else {
+      mech.mechTurn(0);
+    }
+    //piston
+    if (pistonUp = true) {
+      pneu.pistonSwitch(true);
+    }
+    else if (pistonDown = true) {
+      pneu.pistonSwitch(false);
+    }
+    drive(injoy);
+  }
   /**
    * This function is called periodically during autonomous.
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    doPeriodic();
   }
 
   /**
    * This function is called periodically during operator control.
    */
+
+   
+  
+
   @Override
   public void teleopPeriodic() {
-    InputJoystick injoy = new InputJoystick(joy, 0.0);
-    
-
-    pressedUp = injoy.getButtonUp();
-    pressedDown = injoy.getButtonDown();
-    if (pressedUp == false && pressedDown == false) {
-      mech.mechDrive(0);
-    }
-    if (pressedUp == true && pressedDown != true) {
-      mech.mechDrive(0.1);
-    }
-    else if (pressedDown == true && pressedDown != true) {
-      mech.mechDrive(-0.1);
-    }
-    else {
-      mech.mechDrive(0);
-    }
-    drive(injoy);
-    }
+    doPeriodic();
+  }
+  
   public void drive(InputJoystick injoy) {
     
     double x = injoy.getX();
